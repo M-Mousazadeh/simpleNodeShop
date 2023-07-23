@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+const {schema} = require('./secure/UserValidation');
+
 const UserSchema = mongoose.Schema({
     email: {
         type : String,
@@ -14,7 +16,7 @@ const UserSchema = mongoose.Schema({
         trim: true
     },
     phone: {
-        type : Number,
+        type : String,
         required : [true, 'Phone Number is Required!'],
     },
     password: {
@@ -22,6 +24,10 @@ const UserSchema = mongoose.Schema({
         required : [true, 'Password is Required!'],
     }
 })
+
+UserSchema.statics.userValidation = function(body){
+    return schema.validate(body, {abortEarly : false});
+}
 
 UserSchema.pre('save', function(next){
     const user = this;
