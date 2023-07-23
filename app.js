@@ -20,7 +20,8 @@ app.use(setHeaders)
 const PORT = process.env.PORT;
 
 app.use('/', require('./app/routes/index'));
-app.use('/user', require('./app/routes/UserRoutes'));
+app.use('/user', require('./app/routes/userRoutes'));
+app.use('/dash', require('./app/routes/dashboard'));
 
 //* Error Handler
 app.use(errorHandler);
