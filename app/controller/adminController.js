@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const Admin = require('../model/Admin');
+const User = require('../model/User');
 const {errorCreator} = require('../utils/error');
 
 exports.registerAdmin = async (req, res, next)=>{
@@ -47,12 +48,32 @@ exports.deleteAdmin = async(req, res, next)=>{
         const {email, password, confirmPassword} = req.body;
         const user = await Admin.findOne({email});
         if(!user) throw errorCreator("User Not Found!", 404);
+        if(user.adminId === admin.adminId) throw errorCreator("This Admin Can Not Be Deleted!");
         if(!password) throw errorCreator("Password is a Must!")
         if(password !== confirmPassword) throw errorCreator("Password And Confirm Password Must be Same!");
         const isEqual = bcrypt.compare(password, admin.password);
         if(!isEqual) throw errorCreator("You Don't Have Enough Previlages!", 401);
         await Admin.findByIdAndRemove({_id : user._id});
         res.status(200).json({message : `${user.fullname} With Admin Id ${user.adminId} Has Been Deleted!`});
+    } catch (err) {
+        next(err)
+    }
+}
+
+exports.deleteUser = async(req, res, next)=>{
+    try {
+        const {email, password, confirmPassword} = req.body;
+        const id = req.userId;
+        const admin = await Admin.findById({_id : id});
+        if(admin.previlages !== 'full') throw errorCreator("You Don't Have Enough Previlages!", 401);
+        const user = await User.findOne({email});
+        if(!user) throw errorCreator("User Not Found!", 404);
+        if(!password) throw errorCreator("Password is a Must!");
+        if(password !== confirmPassword) throw errorCreator("Password and Confirm Password Must Be Same!");
+        const isEqual = bcrypt.compare(password, admin.password);
+        if(!isEqual) throw errorCreator("You Don't Have Enough Previlages!");
+        await User.findByIdAndRemove({_id: user._id});
+        res.status(200).json({message : `User With ${user.email} Email Address Has Been Deleted!`});
     } catch (err) {
         next(err)
     }

@@ -14,4 +14,7 @@ router.post('/login', adminController.adminLogin)
 //*     @desc       Delete    /admin/delete-admin
 router.delete('/delete-admin', authenticated, adminController.deleteAdmin)
 
+//*     @desc       Delete    /admin/delete-User
+router.delete('/delete-user', authenticated, adminController.deleteUser)
+
 module.exports = router;
