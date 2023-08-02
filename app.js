@@ -21,6 +21,7 @@ app.use(setHeaders)
 
 app.use('/', require('./app/routes/index'));
 app.use('/user', require('./app/routes/userRoutes'));
+app.use('/admin', require('./app/routes/AdminRoutes'))
 app.use('/dash', require('./app/routes/dashboard'));
 
 //* Error Handler
