@@ -1,12 +1,21 @@
-const Admin = require('../model/Admin');
+const Product = require('../model/Product');
 
-exports.getIndex = async(req, res)=>{
-    res.send('hello world');
-    // await Admin.create({
-    //     email : 'mohammadreza.mzm18@gmail.com',
-    //     phone : '09033504047',
-    //     password : '123456',
-    //     previlages : 'full',
-    //     fullname : 'mohammadreza mousazadeh'
-    // })
+exports.getIndex = async(req, res, next)=>{
+    try {
+        const products = await Product.find()
+        res.status(200).json({ products})
+    } catch (err) {
+        next(err)
+    }
+}
+
+exports.search = async (req, res, next)=>{
+    try {
+        const products = await Product.find({
+            $text : {$search : req.query.search},
+        })
+        res.status(200).json({products})
+    } catch (err) {
+        next(err)
+    }
 }

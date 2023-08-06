@@ -39,7 +39,7 @@ const schema = mongoose.Schema({
     }
 })
 
-schema.index({title : "text"});
+schema.index({title : 'text'});
 
 schema.statics.productValidation = function(body){
     return require('./secure/ProductValidation').schema.validate(body, {abortEarly : false});

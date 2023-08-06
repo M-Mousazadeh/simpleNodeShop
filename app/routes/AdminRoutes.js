@@ -23,4 +23,7 @@ router.post('/create-post', authenticated, adminController.createPost)
 //*     @desc       Post    /admin/create-post
 router.post('/upload-image', authenticated, adminController.uploadImage)
 
+//*     @desc       Post    /admin/create-post
+router.get('/images/:path', authenticated, adminController.getImage)
+
 module.exports = router;

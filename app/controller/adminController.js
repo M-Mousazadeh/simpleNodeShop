@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
@@ -143,7 +145,7 @@ exports.uploadImage = (req, res, next)=>{
                     .catch((err) => { 
                       if(err) return res.status(400).json({error : "An Error Occured While Saving The File!"})
                     });
-                    res.status(200).json({image : `http://localhost:3000/uploads/images/${fileName}`, path : `${rootPath}/app/public/upload/images/${fileName}`});
+                    res.status(200).json({image : `http://localhost:3000/admin/images/${fileName}`, path : `${rootPath}/app/public/upload/images/${fileName}`});
                   } else {
                   res.status(400).json({error : "No Image Found To Upload!"})
                 }
@@ -152,4 +154,16 @@ exports.uploadImage = (req, res, next)=>{
             next(err)
         }
     })
+}
+
+exports.getImage = (req, res, next)=>{
+  try {
+    console.log(req.params.path)
+    fs.readFile(`${rootPath}/app/public/upload/images/${req.params.path}`, (err, data)=>{
+      if (err) throw errorCreator('Can Not Find The Image', 404);
+      res.status(200).send(data)
+    })
+  } catch (err) {
+    next(err)
+  }
 }
