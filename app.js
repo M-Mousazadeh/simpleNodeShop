@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload');
 
 const {errorHandler} = require('./app/middlewares/errors');
 const {setHeaders} = require('./app/middlewares/headers');
@@ -15,8 +16,9 @@ require('dotenv').config({
 connectDB()
 
 //* Setting Up the BodyParser, Json Parser and Headers
-app.use(express.urlencoded({extended : false}));
+app.use(express.urlencoded({extended : true}));
 app.use(express.json({}));
+app.use(fileUpload());
 app.use(setHeaders)
 
 app.use('/', require('./app/routes/index'));

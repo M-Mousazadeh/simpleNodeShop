@@ -1,11 +1,18 @@
 const mongoose = require('mongoose');
 
+const {randomInt} = require('../utils/helpers');
+
 const schema = mongoose.Schema({
+    productId : {
+        type : String,
+        default : randomInt(100, 10000),
+        unique : true,
+    },
     title : {
         type : String,
         required : [true, 'Title Is Required!']
     },
-    Detail:{
+    detail:{
         type : String,
         required : [true, 'Detail is Required!']
     },
@@ -33,5 +40,9 @@ const schema = mongoose.Schema({
 })
 
 schema.index({title : "text"});
+
+schema.statics.productValidation = function(body){
+    return require('./secure/ProductValidation').schema.validate(body, {abortEarly : false});
+}
 
 module.exports = mongoose.model('Product', schema);
